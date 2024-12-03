@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pirate Speak Translator</title>
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'IM Fell Great Primer SC', serif; /* Set to IM Fell Great Primer SC */
+      background-color: #0d1117;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #FFDD00;
+      font-size: 3.5rem;
+      text-shadow: 3px 3px 5px #000000;
+      margin-bottom: 20px;
+    }
+
+    #translator-container {
+      width: 90%;
+      max-width: 700px;
+      background-color: #161b22;
+      border: 3px solid #FFDD00;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      border: 2px solid #FFDD00;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 1rem;
+      background-color: #0d1117;
+      color: #FFDD00;
+      resize: none;
+    }
+
+    textarea::placeholder {
+      color: #999;
+    }
+
+    button {
+      font-family: 'Poppins', sans-serif; /* Button font changed to Poppins */
+      background-color: #FFDD00;
+      border: none;
+      border-radius: 8px;
+      padding: 15px 20px;
+      margin-top: 20px;
+      font-size: 1.3rem;
+      color: #000000;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #ffe033;
+      transform: scale(1.05);
+      transition: 0.3s;
+    }
+
+    #output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #0d1117;
+      border: 2px solid #FFDD00;
+      border-radius: 8px;
+      min-height: 70px;
+      font-size: 1.2rem;
+      color: #FFDD00;
+      text-align: left;
+    }
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #bbbbbb;
+      font-family: 'Trebuchet MS', sans-serif; /* Footer font set to Trebuchet MS */
+    }
+
+    footer a {
+      color: #FFDD00;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+Great+Primer+SC&family=Poppins:wght@600&family=Trebuchet+MS&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>Pirate Speak Translator</h1>
+  <div id="translator-container">
+    <textarea id="inputText" placeholder="Enter text to translate..."></textarea>
+    <button id="translateButton">TRANSLATE TO PIRATE SPEAK</button>
+    <div id="output">Your pirate speak will appear here!</div>
+  </div>
+  <footer>
+    Made with 🏴‍☠️ by yer trusty buccaneer!<br>
+    sarvesh was here.
+  </footer>  
+  <script>
+    // Pirate Speak Dictionary
+    const pirateDictionary = {
+      hello: "ahoy",
+      my: "me",
+      friend: "matey",
+      friends: "crew",
+      yes: "aye",
+      no: "nay",
+      stop: "avast",
+      treasure: "booty",
+      money: "doubloons",
+      captain: "cap’n",
+      is: "be",
+      the: "th'",
+      you: "ye",
+      your: "yer",
+      "are you": "be ye",
+      "you are": "ye be",
+      "where is": "whar be",
+      "of": "o'",
+      "old": "auld",
+      "go": "sail",
+      "food": "grub",
+      "drink": "grog",
+      ship: "vessel",
+      sailor: "seafarer",
+      sea: "ocean",
+      storm: "tempest",
+      "good day": "yo ho ho",
+      adventure: "voyage",
+      sword: "cutlass",
+      cannon: "blaster",
+      fight: "skirmish",
+      "to": "t'",
+      "and": "n'",
+      "bad": "scurvy",
+      "flag": "jolly roger",
+      enemy: "foe",
+      attack: "plunder",
+      sail: "navigate",
+      dock: "port",
+      port: "harbor",
+      "rum": "grog",
+      "beer": "ale",
+      "brave": "bold",
+      "loot": "booty",
+      "hideout": "lair",
+      "desert": "maroon",
+      "rich": "wealthy",
+      "poor": "destitute"
+    };
+
+    // Function to sanitize words (removes punctuation)
+    function sanitizeWord(word) {
+      return word.replace(/[.,!?;:]/g, "").toLowerCase();
+    }
+
+    // Translator Function
+    function translateToPirateSpeak(input) {
+      // Split input into words while keeping punctuation
+      const words = input.match(/[\w]+[.,!?;:]?/g) || [];
+      let translatedWords = [];
+      let capitalizeNext = true; // Flag to capitalize the first letter of each sentence
+
+      words.forEach(word => {
+        const sanitized = sanitizeWord(word);
+        const pirateWord = pirateDictionary[sanitized] || sanitized;
+
+        // Preserve punctuation
+        let translatedWord;
+        if (word.match(/[.,!?;:]/)) {
+          translatedWord = pirateWord + word.match(/[.,!?;:]/)[0];
+        } else {
+          translatedWord = pirateWord;
+        }
+
+        // Capitalization: Capitalize the first letter of the first word and after punctuation
+        if (capitalizeNext) {
+          translatedWord = translatedWord.charAt(0).toUpperCase() + translatedWord.slice(1);
+          capitalizeNext = false; // Reset flag after capitalization
+        }
+
+        // Check for sentence-ending punctuation
+        if (word.match(/[.!?]/)) {
+          capitalizeNext = true; // Set flag for next word capitalization
+        }
+
+        translatedWords.push(translatedWord);
+      });
+
+      return translatedWords.join(" ");
+    }
+
+    // DOM Elements
+    const inputText = document.getElementById("inputText");
+    const translateButton = document.getElementById("translateButton");
+    const outputDiv = document.getElementById("output");
+
+    // Event Listener for Button
+    translateButton.addEventListener("click", () => {
+      const userInput = inputText.value.trim();
+      const translatedText = translateToPirateSpeak(userInput);
+      outputDiv.textContent = translatedText || "Yarr! Enter some text fer translation!";
+    });
+  </script>
+</body>
+</html>
